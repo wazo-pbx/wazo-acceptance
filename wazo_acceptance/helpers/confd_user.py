@@ -31,6 +31,13 @@ class ConfdUser:
             confd_user.add_voicemail(voicemail)
         self._context.add_cleanup(confd_user.remove_voicemail)
 
+    def update_fallback(self, user, fallback):
+        fallbacks = self._confd_client.users(user).list_fallbacks()
+        old_fallbacks = fallbacks.copy()
+        fallbacks.update(fallback)
+        self._confd_client.users(user).update_fallbacks(fallbacks)
+        self._context.add_cleanup(self._confd_client.users(user).update_fallbacks, old_fallbacks)
+
     def get_by(self, **kwargs):
         user = self._find_by(**kwargs)
         if not user:
