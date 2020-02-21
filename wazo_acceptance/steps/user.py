@@ -67,6 +67,10 @@ def given_there_are_telephony_users_with_infos(context):
             'password': body.get('password') or random_string(10, sample=string.printable),
         }
         context.helpers.user.create(user_body)
+        tracking_id = "{} {}".format(body['firstname'], body.get('lastname', '')).strip()
+
+        if body.get('with_token', 'no') == 'yes':
+            context.helpers.token.create(user_body['username'], user_body['password'], tracking_id)
 
         if not body.get('context'):
             # User has no line
@@ -115,7 +119,6 @@ def given_there_are_telephony_users_with_infos(context):
             context.confd_client.users(confd_user).add_agent(agent)
 
         if endpoint == 'sip' and body.get('with_phone', 'yes') == 'yes':
-            tracking_id = "{} {}".format(body['firstname'], body.get('lastname', '')).strip()
             expected_event = {'uuid': confd_user['uuid'], 'line_state': 'available'}
             with context.helpers.bus.wait_for_event('chatd_presence_updated', expected_event):
                 context.helpers.sip_phone.register_and_track_phone(tracking_id, sip)
