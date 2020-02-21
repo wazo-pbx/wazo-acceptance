@@ -36,6 +36,13 @@ def step_user_is_hungup(context, tracking_id):
     until.true(phone.is_hungup, tries=3)
 
 
+@step('"{tracking_id}" is hungup immediately')
+def step_user_is_hungup_immediately(context, tracking_id):
+    phone = context.phone_register.get_phone(tracking_id)
+    _sleep(1)
+    phone.is_hungup()
+
+
 @step('"{tracking_id}" is talking')
 def step_user_is_talking(context, tracking_id):
     phone = context.phone_register.get_phone(tracking_id)
@@ -97,6 +104,24 @@ def step_user_puts_call_on_hold(context, tracking_id):
 def step_user_resumes_call(context, tracking_id):
     phone = context.phone_register.get_phone(tracking_id)
     phone.resume()
+
+
+@when('a call is started')
+def when_a_call_is_started(context):
+
+    def _call(caller, callee, hangup, dial, talk_time=0, ring_time=0):
+        caller_phone = context.phone_register.get_phone(caller)
+        callee_phone = context.phone_register.get_phone(callee)
+        first_to_hangup = caller_phone if hangup == 'caller' else callee_phone
+
+        caller_phone.call(dial)
+        _sleep(ring_time)
+        callee_phone.answer()
+        _sleep(talk_time)
+        first_to_hangup.hangup()
+
+    for call_info in context.table:
+        _call(**call_info.as_dict())
 
 
 @when('I wait "{seconds}" seconds')
