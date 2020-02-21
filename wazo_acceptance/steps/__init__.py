@@ -8,6 +8,7 @@ from .asterisk import *  # noqa
 from .auth import *  # noqa
 from .backup import *  # noqa
 from .bus import *  # noqa
+from .call import *  # noqa
 from .call_filter import *  # noqa
 from .conference import *  # noqa
 from .consul import *  # noqa
