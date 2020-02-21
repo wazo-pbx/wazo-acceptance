@@ -128,6 +128,7 @@ def given_there_are_telephony_users_with_infos(context):
 def given_user_has_lines(context, firstname, lastname):
     context.table.require_columns(['name', 'context'])
     confd_user = context.helpers.confd_user.get_by(firstname=firstname, lastname=lastname)
+    tracking_id = "{} {}".format(firstname, lastname)
     for row in context.table:
         body = row.as_dict()
 
@@ -156,7 +157,7 @@ def given_user_has_lines(context, firstname, lastname):
         if endpoint == 'sip' and body.get('with_phone', 'yes') == 'yes':
             expected_event = {'uuid': confd_user['uuid'], 'line_state': 'available'}
             with context.helpers.bus.wait_for_event('chatd_presence_updated', expected_event):
-                context.helpers.sip_phone.register_and_track_phone(body['name'], sip)
+                context.helpers.sip_phone.register_and_track_phone(tracking_id, sip)
 
 
 @given('"{firstname} {lastname}" has enabled "{dnd_name}" service')

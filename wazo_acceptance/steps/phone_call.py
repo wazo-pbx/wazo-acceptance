@@ -4,6 +4,9 @@
 import time
 
 from behave import step, when
+from hamcrest import (
+    assert_that,
+)
 from xivo_test_helpers import until
 
 CHAN_PREFIX = 'PJSIP'

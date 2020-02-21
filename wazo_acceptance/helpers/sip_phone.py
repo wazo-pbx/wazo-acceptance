@@ -126,6 +126,10 @@ class SIPPhone:
         return any(device.get('Device') == device_name and device.get('State') == 'ONHOLD'
                    for device in response)
 
+    @property
+    def sip_username(self):
+        return self._name
+
 
 class PhoneFactory:
 
