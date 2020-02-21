@@ -419,3 +419,9 @@ def given_user_has_a_fallback_to_user(context, firstname, lastname, fallback_nam
             }
         },
     )
+
+
+@given('"{firstname} {lastname}" has a "{seconds}" seconds ringing time')
+def given_user_has_x_seconds_ringing_time(context, firstname, lastname, seconds):
+    confd_user = context.helpers.confd_user.get_by(firstname=firstname, lastname=lastname)
+    context.helpers.confd_user.set_ringing_time(confd_user, int(seconds))
