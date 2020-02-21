@@ -1,4 +1,4 @@
-# Copyright 2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2019-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
@@ -30,10 +30,20 @@ class ExtensionFeature:
 
         self._context.add_cleanup(self._confd_client.extensions_features.update, old_feature)
 
-    def enable(self, feature_name, extension):
+    def enable(self, feature_name, extension=None):
         feature = {
             'feature': feature_name,
             'enabled': True,
-            'exten': '_{}.'.format(extension),
         }
+        if extension:
+            feature['exten'] = '_{}.'.format(extension)
+        self._update(feature)
+
+    def disable(self, feature_name, extension=None):
+        feature = {
+            'feature': feature_name,
+            'enabled': False,
+        }
+        if extension:
+            feature['exten'] = '_{}.'.format(extension)
         self._update(feature)
