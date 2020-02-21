@@ -48,9 +48,22 @@ def step_user_is_talking_to(context, tracking_id, callerid):
     until.true(phone.is_talking_to, callerid, tries=3)
 
 
+@step('"{tracking_id}" is talking to "{other_party_id}" on its contact "{contact_number}"')
+def step_user_is_talking_to_other_party_with_contact(context, tracking_id, other_party_id, contact_number):
+    phone = context.phone_register.get_phone(tracking_id, int(contact_number) - 1)
+    until.true(phone.is_talking, tries=3)
+    assert_that(phone.is_talking_to(other_party_id))
+
+
 @step('"{tracking_id}" answers')
 def step_user_answers(context, tracking_id):
     phone = context.phone_register.get_phone(tracking_id)
+    phone.answer()
+
+
+@step('"{tracking_id}" answers on its contact "{contact_number}"')
+def step_user_answers(context, tracking_id, contact_number):
+    phone = context.phone_register.get_phone(tracking_id, int(contact_number) - 1)
     phone.answer()
 
 
