@@ -12,16 +12,6 @@ Feature: Call Generation
          | User 100 | 1101 | User 101 | 3         | callee |
         Then I see no recording file of this call in monitoring audio files page
 
-    # NOTE(afournier): the API does not expose the disabled field of lines - use extensions
-    Scenario: Call to line that is disabled
-        Given there are users with infos:
-            | firstname | lastname | number | context | protocol | with_phone |
-            | Bountrabi | Sylla    | 1102   | default | sip      | yes        |
-            | Papa      | Sylla    | 1103   | default | sip      | no         |
-        Given the line "1103@default" is disabled
-        When "Bountrabi Sylla" calls "1103"
-        Then "Bountrabi Sylla" last dialed extension was not found
-
     Scenario: Bus messages on hold and resume
         Given I listen on the bus for messages:
         | queue | routing_key  |

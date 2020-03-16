@@ -3,10 +3,14 @@
 
 import time
 
-from behave import step, when
+from behave import step, then, when
 from hamcrest import (
     assert_that,
+    calling,
+    not_,
+    raises,
 )
+from linphonelib import ExtensionNotFoundException
 from xivo_test_helpers import until
 
 CHAN_PREFIX = 'PJSIP'
@@ -21,6 +25,12 @@ def step_a_calls_exten(context, tracking_id, exten):
 @step('"{tracking_id}" is ringing')
 def step_user_is_ringing(context, tracking_id):
     phone = context.phone_register.get_phone(tracking_id)
+    until.true(phone.is_ringing, tries=3)
+
+
+@step('"{tracking_id}" is ringing on its contact "{contact_number}"')
+def step_user_is_ringing_on_contact_number(context, tracking_id, contact_number):
+    phone = context.phone_register.get_phone(tracking_id, int(contact_number) - 1)
     until.true(phone.is_ringing, tries=3)
 
 
@@ -135,6 +145,14 @@ def when_a_call_is_started(context):
 @when('I wait "{seconds}" seconds to simulate call center')
 def when_i_wait_n_seconds(context, seconds):
     _sleep(seconds)
+
+
+@then('"{tracking_id}" last dialed extension was not found')
+def then_user_last_dialed_extension_was_not_found(context, tracking_id):
+    # XXX(afournier): phone.last_call_result does not work here - the fact that the extension does
+    # not exist is not a problem for linphone-daemon. It does not trigger an error.
+    phone = context.phone_register.get_phone(tracking_id)
+    assert_that(not_(phone.is_talking))
 
 
 @when('chan_test calls "{exten}@{exten_context}" with id "{channel_id}"')

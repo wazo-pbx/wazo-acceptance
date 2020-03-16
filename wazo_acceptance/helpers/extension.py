@@ -1,4 +1,4 @@
-# Copyright 2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2019-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
@@ -25,3 +25,6 @@ class Extension:
         extensions = self._confd_client.extensions.list(**kwargs)['items']
         for extension in extensions:
             return extension
+
+    def disable(self, extension_id):
+        self._confd_client.extensions.update({'id': extension_id, 'enabled': False})

@@ -84,7 +84,7 @@ Feature: Call Generation
     Given there are telephony users with infos:
       | firstname | lastname | exten | context | username | password | with_token |
       | Donald    | Trump    | 1001  | default | donald   | trump    | no         |
-      | Vladimir  | Poutine  | 1002  | default | vladimir | poutine  | yes        |
+      | Vladimir  | Poutine  |       |         | vladimir | poutine  | yes        |
     Given "Vladimir Poutine" has lines:
       | name  | exten | context | with_phone |
       | line1 | 1002  | default | yes        |
@@ -94,3 +94,12 @@ Feature: Call Generation
     When "Vladimir Poutine" relocates its call to its contact "2"
     When "Vladimir Poutine" answers on its contact "2"
     Then "Vladimir Poutine" is talking to "Donald Trump" on its contact "2"
+
+  Scenario: Call to extension that is disabled
+    Given there are telephony users with infos:
+      | firstname | lastname | exten | context | with_phone |
+      | Bountrabi | Sylla    | 1102  | default | yes        |
+      | Papa      | Sylla    | 1103  | default | no         |
+    Given the extension "1103@default" is disabled
+    When "Bountrabi Sylla" calls "1103"
+    Then "Bountrabi Sylla" last dialed extension was not found

@@ -17,6 +17,7 @@ from .coredump import *  # noqa
 from .device import *  # noqa
 from .dhcp import *  # noqa
 from .endpoint_sip import *  # noqa
+from .extension import *  # noqa
 from .extension_feature import *  # noqa
 from .fail2ban import *  # noqa
 from .files import *  # noqa
