@@ -405,19 +405,14 @@ def when_the_user_active_call_filter(context, firstname, lastname, filter_name):
     time.sleep(5)  # call processing
 
 
-@given('"{firstname} {lastname}" has a "{fallback_name}" fallback to user "{destination_firstname} {destination_lastname}"')
-def given_user_has_a_fallback_to_user(context, firstname, lastname, fallback_name, destination_firstname, destination_lastname):
+@given('"{firstname} {lastname}" has a "{fallback_name}" fallback to user "{dst_firstname} {dst_lastname}"')
+def given_user_has_a_fallback_to_user(context, firstname, lastname, fallback_name, dst_firstname, dst_lastname):
     confd_user = context.helpers.confd_user.get_by(firstname=firstname, lastname=lastname)
-    destination_user_id = context.helpers.confd_user.get_by(firstname=destination_firstname, lastname=destination_lastname)['id']
-    destination_name = "{}_destination".format(fallback_name)
+    dst_user = context.helpers.confd_user.get_by(firstname=dst_firstname, lastname=dst_lastname)
+    dst_name = "{}_destination".format(fallback_name)
     context.helpers.confd_user.update_fallback(
         confd_user,
-        {
-            destination_name: {
-                'type': 'user',
-                'user_id': destination_user_id,
-            }
-        },
+        {dst_name: {'type': 'user', 'user_id': dst_user['id']}},
     )
 
 

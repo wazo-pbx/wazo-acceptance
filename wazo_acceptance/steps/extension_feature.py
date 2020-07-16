@@ -12,6 +12,7 @@ _DESCRIPTION_TO_FEATURE = {
     'call recording': 'callrecord',
 }
 
+
 @given('the "{extension_name}" extension is disabled')
 def given_the_extension_is_disabled(context, extension_name):
     context.helpers.extension_feature.disable(_DESCRIPTION_TO_FEATURE[extension_name])

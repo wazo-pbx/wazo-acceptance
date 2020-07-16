@@ -69,7 +69,7 @@ def step_user_answers(context, tracking_id):
 
 
 @step('"{tracking_id}" answers on its contact "{contact_number}"')
-def step_user_answers(context, tracking_id, contact_number):
+def step_user_answers_on_its_contact(context, tracking_id, contact_number):
     phone = context.phone_register.get_phone(tracking_id, int(contact_number) - 1)
     phone.answer()
 

@@ -30,14 +30,18 @@ def when_firstname_lastname_relocates_its_call_to_its_contact_number(
     calld_client = CalldClient(**context.wazo_config['calld'])
     calld_client.set_token(token_uuid)
 
-    destination_line_sip_username = context.phone_register.get_phone(tracking_id, int(contact_number) - 1).sip_username
-    destination_line_id = context.confd_client.lines.list(search=destination_line_sip_username, recurse=True)['items'][0]['id']
+    contact = int(contact_number) - 1
+    dst_line_sip = context.phone_register.get_phone(tracking_id, contact)
+    dst_line_sip_username = dst_line_sip.sip_username
+
+    dst_lines = context.confd_client.lines.list(search=dst_line_sip_username, recurse=True)
+    dst_line_id = dst_lines['items'][0]['id']
 
     current_call_id = calld_client.calls.list_calls_from_user()['items'][0]['call_id']
     calld_client.relocates.create_from_user(
         initiator=current_call_id,
         destination='line',
-        location={'line_id': destination_line_id, 'contact': destination_line_sip_username},
+        location={'line_id': dst_line_id, 'contact': dst_line_sip_username},
     )
 
 
